@@ -1,0 +1,37 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import Description from '../components/Description';
+import Loan from '../components/Loan';
+
+const Summary = () => {
+  const [movie, setMovie] = useState(null);
+  const { movieId } = useParams(); 
+
+  useEffect(() => { // Hook qui appelle la fonction
+    const getMovieDetails = async () => {
+      const url = `https://stud.yoso.fr/api/movies/${movieId}`; 
+      const response = await fetch(url);
+      const data = await response.json();
+      setMovie(data);
+    };
+    getMovieDetails();
+  }, [movieId]);
+
+  const handleLoanSuccess = (loanedMovie) => { 
+    setMovie(loanedMovie);
+  };
+
+  return (
+    <div className="summary">
+      {movie ? ( 
+        <div>
+          <h2 className='description-title'>{movie.title}</h2>
+          <p className='description-box'>{movie.description}</p>
+          <Loan movie={movie} onLoanSuccess={handleLoanSuccess} /> 
+          </div> 
+      ) : null }
+    </div>
+  );
+};
+
+export default Summary;
