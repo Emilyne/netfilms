@@ -1,0 +1,38 @@
+import React, { useState, useEffect } from 'react';
+import MovieList from '../components/MovieList';
+
+const Movies = () => {
+	const [movies, setMovies] = useState([]);
+
+	const getMovieRequest = async () => {
+		const url = `https://stud.yoso.fr/api/movies/`;
+
+		const response = await fetch(url);
+		const responseJson = await response.json();
+
+		if (responseJson) {
+		setMovies(responseJson); 
+				
+			};
+		}
+		//console.log(movies);
+	
+
+	useEffect(() => {
+		getMovieRequest(); // 1er argument de la fonction.
+	}, []); // array de dépendendance
+
+	
+
+		  return (
+			<div className='movie-background'>
+		<div className='container-movie-app'>
+			<div className='row'>
+				<MovieList movies={movies} />
+			</div>
+		</div>
+		</div>
+	);
+};
+
+export default Movies;
