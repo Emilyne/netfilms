@@ -1,0 +1,42 @@
+import React, { useState } from 'react';
+
+const Loan = ({ movie, onLoanSuccess }) => {
+  const [loanSuccess, setLoanSuccess] = useState(false);
+
+  const handleLoanClick = async () => {
+    const url = 'https://stud.yoso.fr/api/loans/';
+    const loanData = {
+      id: movie.id,
+      loanBy: localStorage.getItem("email"),
+      movie: movie.title,
+      loanAt: new Date().toISOString(),
+    };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(loanData),
+    });
+
+    if (response.ok) {
+      setLoanSuccess(true);
+      onLoanSuccess(movie);
+    }
+  };
+
+  return (
+    <div className="loan-success">
+      {loanSuccess ? (
+        <p>Location réussie. Bon visionnage !</p>
+      ) : (
+        <button className='loan-button' onClick={handleLoanClick}>
+          Louer le film
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default Loan;
