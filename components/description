@@ -1,0 +1,33 @@
+import React, { useState, useEffect } from 'react';
+
+const Description = (props) => {
+  const [movie, setMovie] = useState(null);
+
+  useEffect(() => {
+    if (props.selectedMovieId) { 
+      const getMovie = async () => {
+        const url = `https://stud.yoso.fr/api/movies/${props.selectedMovieId}`;
+        const response = await fetch(url);
+        const movie = await response.json();
+        setMovie(movie); // Set the new state is the prop id is true.
+      };
+      getMovie(); // Function that calls in the API.
+    }
+  }, [props.selectedMovieId]); 
+  
+
+  return (
+    <>
+      {movie && (
+        <div >
+        <div>
+          <h2 >{movie.title}</h2>
+          <div>{movie.description}</div>
+        </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default Description;
