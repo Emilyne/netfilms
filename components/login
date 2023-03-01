@@ -1,0 +1,82 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const Login = (props) => { 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+     fetch(`https://stud.yoso.fr/api/users/?email=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => {
+           if (resp.status === 200) {
+          fetch("https://stud.yoso.fr/api/token/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password,
+            }),
+          })
+            .then((resp) => {
+                       if (resp.status === 200) {
+                resp.json().then((received) => {
+                  console.log("received", received);
+                  const token = received.access;
+                  localStorage.setItem("token", token);
+                  localStorage.setItem("email", email);
+                  navigate("/movies");
+                });
+              } else {
+             alert("Adresse e-mail ou mot de passe invalide.");
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          alert("Cette adresse e-mail n'est pas enregistrée.");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  return (
+        <form className="login-form" onSubmit={handleSubmit}>
+      <label htmlFor="email">Email</label>
+      <input
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        type="email"
+        className="label-email"
+        placeholder="Adresse e-mail"
+        id="email"
+        name="email"
+      />
+      <label htmlFor="password">Mot de passe</label>
+      <input
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        type="password"
+        className="label-password"
+        placeholder="Mot de passe"
+        id="password"
+        name="password"
+      />
+      <button className="button-connect" type="submit">Se connecter</button>
+    </form>
+  );
+};
+
+export default Login;
