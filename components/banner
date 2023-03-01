@@ -1,0 +1,15 @@
+import logo from '../assets/logo.PNG'
+import { Link } from 'react-router-dom'
+
+function Banner() {
+    return (
+    <div className='netfilms-banner'>
+             <img src={logo} alt='Netfilms' className='netfilms-logo' />
+
+     </div>
+    )
+}
+
+export default Banner;
+
+
